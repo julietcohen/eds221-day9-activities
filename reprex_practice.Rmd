@@ -37,13 +37,38 @@ mack_creek_lengths <- mack_creek_vertebrates %>%
   clean_names() %>% 
   select(year:sampledate) %>% 
   filter(section == "CC") %>% 
-  mutate(across(where(is.character, tolower))) %>% 
+  mutate(across(where(is.character), tolower)) %>% 
   drop_na(species) %>% 
   group_by(species) %>% 
   summarize(mean_length_cm = mean(length1, na.rm = TRUE),
             sd_length_cm = sd(length1, na.rm = TRUE)) %>% 
   ungroup()
+
+# this code starts with mack_creek_vertebrates and cleans the names to lower snake case, then limits the col to those starting at year through sampledate, then filters the rows to only those that refer to CC, then mutates multiple columns to lowercase (the parenthesis needed to be fixed to only have as.character inside and then a comma then tolower), then drops the rows where species was not recorded, then groups by and summarizes to find the mean and sd of length cols then ungroups
 ```
+
+
+## My first reprex
+
+```{r}
+library(palmerpenguins)
+
+penguins_tolower <- penguins %>% 
+  mutate(across(where(is.factor), as.character)) %>% 
+  mutate(across(where(is.character), tolower))
+
+class(penguins_tolower$species)
+
+penguins_tolower
+
+# first need to check the class of the column(s) that you want to change the case of, then when you use the mutate function to change the case, you need to specify is.character and make sure you use the () correctly, the where function only has 1 argument, then close parenthesis, then specify to lower as the second argument within the where function
+
+```
+
+
+
+
+
 
 ### reprex 2
 
